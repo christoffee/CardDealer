@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <title>Card Dealer</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <script src="http://fb.me/react-0.12.2.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="dealer">
+        <h1>Card Dealer</h1>
+        <p>A simple card dealer for shuffling & deal X amount of cards.</p>
+        <p>Built with: <span class="label label-info">React</span> <span class="label label-info">Bootstrap</span> <span class="label label-info">UnderscoreJS</span></p>
+        <div id="content"></div>
+        <footer class="pull-right"><p>by christoffee <img src="images/christoffee.png" /></p></footer>
+      </div>
+    </div>
+
+    <script type="text/jsx">
+      var cards = [{"card":"Ace","suit":"Hearts","colour":"red"},{"card":"2","suit":"Hearts","colour":"red"},{"card":"3","suit":"Hearts","colour":"red"},{"card":"4","suit":"Hearts","colour":"red"},{"card":"5","suit":"Hearts","colour":"red"},{"card":"6","suit":"Hearts","colour":"red"},{"card":"7","suit":"Hearts","colour":"red"},{"card":"8","suit":"Hearts","colour":"red"},{"card":"9","suit":"Hearts","colour":"red"},{"card":"10","suit":"Hearts","colour":"red"},{"card":"Jack","suit":"Hearts","colour":"red"},{"card":"Queen","suit":"Hearts","colour":"red"},{"card":"King","suit":"Hearts","colour":"red"},{"card":"Ace","suit":"Clubs","colour":"black"},{"card":"2","suit":"Clubs","colour":"black"},{"card":"3","suit":"Clubs","colour":"black"},{"card":"4","suit":"Clubs","colour":"black"},{"card":"5","suit":"Clubs","colour":"black"},{"card":"6","suit":"Clubs","colour":"black"},{"card":"7","suit":"Clubs","colour":"black"},{"card":"8","suit":"Clubs","colour":"black"},{"card":"9","suit":"Clubs","colour":"black"},{"card":"10","suit":"Clubs","colour":"black"},{"card":"Jack","suit":"Clubs","colour":"black"},{"card":"Queen","suit":"Clubs","colour":"black"},{"card":"King","suit":"Clubs","colour":"black"},{"card":"Ace","suit":"Diamonds","colour":"red"},{"card":"2","suit":"Diamonds","colour":"red"},{"card":"3","suit":"Diamonds","colour":"red"},{"card":"4","suit":"Diamonds","colour":"red"},{"card":"5","suit":"Diamonds","colour":"red"},{"card":"6","suit":"Diamonds","colour":"red"},{"card":"7","suit":"Diamonds","colour":"red"},{"card":"8","suit":"Diamonds","colour":"red"},{"card":"9","suit":"Diamonds","colour":"red"},{"card":"10","suit":"Diamonds","colour":"red"},{"card":"Jack","suit":"Diamonds","colour":"red"},{"card":"Queen","suit":"Diamonds","colour":"red"},{"card":"King","suit":"Diamonds","colour":"red"},{"card":"Ace","suit":"Spades","colour":"black"},{"card":"2","suit":"Spades","colour":"black"},{"card":"3","suit":"Spades","colour":"black"},{"card":"4","suit":"Spades","colour":"black"},{"card":"5","suit":"Spades","colour":"black"},{"card":"6","suit":"Spades","colour":"black"},{"card":"7","suit":"Spades","colour":"black"},{"card":"8","suit":"Spades","colour":"black"},{"card":"9","suit":"Spades","colour":"black"},{"card":"10","suit":"Spades","colour":"black"},{"card":"Jack","suit":"Spades","colour":"black"},{"card":"Queen","suit":"Spades","colour":"black"},{"card":"King","suit":"Spades","colour":"black"}];
+
+      var Card = React.createClass({
+
+        //return card markup
+        render: function() {
+          var cardNodes = this.props.data.map(function (card) {
+            return (
+              <h2 className={card.colour}>{card.card} of {card.suit}</h2>
+            );
+          });
+          return (
+            <div className="card">
+              {cardNodes}
+            </div>
+          );
+        }
+      });
+    
+      var Cards = React.createClass({
+        getInitialState: function() {
+          return {cards: []};
+        },
+        deal: function () {
+
+          //Get amount of cards chosen
+          var number = this.refs.cardNumber.getDOMNode().value || 1;
+
+          //Get the first X amount og cards
+          var dealtCards = _.first(cards, [number]);
+
+          //Change state to first X amountof cards
+          this.setState({data: dealtCards});
+        },
+        handleDeal: function(e) {
+          e.preventDefault();
+
+          this.deal();
+        },
+        handleShuffle: function(e) {
+          e.preventDefault();
+
+          //shuffle cards
+          cards = _.shuffle(cards);
+
+          this.deal();
+          
+        },
+        render: function() {
+
+          //render markup
+          var cards = this.state.data || [];
+          return (
+            <div>
+            <form>
+              <label for="inputNumber" class="sr-only">Number of Cards : </label> 
+              <input type="number" id="inputNumber" ref="cardNumber" class="form-control" placeholder="Default 1" required="" autofocus=""/>
+              <button type="button" className="btn btn-primary btn-lg" onClick={this.handleDeal}>Deal</button>
+              <button type="button" className="btn btn-success btn-lg" onClick={this.handleShuffle}>Shuffle Deck & Deal</button>
+              </form>
+              <Card data={cards} />
+            </div>
+          );
+        }
+      });
+
+      React.render(
+        <Cards />,
+        document.getElementById('content')
+      );
+    </script>
+  </body>
+</html>
